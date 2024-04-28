@@ -18,6 +18,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -25,12 +27,15 @@ import javax.crypto.spec.SecretKeySpec;
 public class SpringSecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth
+                  .requestMatchers(mvc.pattern("/auth/login")).permitAll()
+                  .requestMatchers(mvc.pattern("/auth/register")).permitAll()
+                  .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults()).build();
     }
 
@@ -56,4 +61,9 @@ public class SpringSecurityConfig {
         UserDetails user = User.builder().username("user").password(passwordEncoder().encode("password")).roles("USER").build();
         return new InMemoryUserDetailsManager(user);
     }
+  @Bean
+  MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
+    return new MvcRequestMatcher.Builder(introspector);
+  }
+
 }

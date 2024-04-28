@@ -1,5 +1,6 @@
 package com.chatop.portal.controller;
 
+import com.chatop.portal.model.LoginParameters;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,8 +38,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?>  getToken(@RequestBody String email, String password) {
-        User authenticatedUser = userService.authenticateUser(email, password);
+    public ResponseEntity<?>  getToken(@RequestBody LoginParameters loginParameters) {
+       User authenticatedUser = userService.authenticateUser(loginParameters.getEmail(), loginParameters.getPassword());
 
         if (authenticatedUser != null) {
             // Génère le JWT
