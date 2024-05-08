@@ -4,6 +4,7 @@ import lombok.Data;
 
 import jakarta.persistence.*;
 
+import java.io.File;
 import java.util.Date;
 
 @Entity
@@ -22,7 +23,7 @@ public class Rental {
     private Double surface;
 
     @Column
-    private double price;
+    private Double price;
 
     @Column
     private String picture;
@@ -36,7 +37,6 @@ public class Rental {
     @Column(nullable = false)
     private Date updated_at;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+    @Column
+    private Long ownerId;
 }

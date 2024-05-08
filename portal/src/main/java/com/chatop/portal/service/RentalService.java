@@ -6,6 +6,8 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
+import java.util.Date;
 import java.util.Optional;
 
 @Data
@@ -14,7 +16,7 @@ public class RentalService {
     @Autowired
     private RentalRepository rentalRepository;
 
-    public Optional<Rental> getRental(final Long id) {
+    public Optional<Rental> getRental(final long id) {
         return rentalRepository.findById(id);
     }
 
@@ -22,8 +24,32 @@ public class RentalService {
         return rentalRepository.findAll();
     }
 
-    public Rental saveRental(Rental rental) {
-        Rental savedRental= rentalRepository.save(rental);
-        return savedRental;
+  public Rental saveRental(String name, double surface, double price, String picturePath, String description, Long ownerId) {
+    Rental rental = new Rental();
+    rental.setName(name);
+    rental.setSurface(surface);
+    rental.setPrice(price);
+    rental.setPicture(picturePath);
+    rental.setDescription(description);
+    rental.setOwnerId(ownerId);
+    rental.setCreated_at(new Date());
+    rental.setUpdated_at(new Date());
+
+    return rentalRepository.save(rental);
+  }
+
+  public Rental updateRental(Long id, String name, double surface, double price, String description) {
+    Optional<Rental> optionalRental = rentalRepository.findById(id);
+    if (optionalRental.isPresent()) {
+      Rental rental = optionalRental.get();
+      rental.setName(name);
+      rental.setSurface(surface);
+      rental.setPrice(price);
+      rental.setDescription(description);
+      rental.setUpdated_at(new Date());
+      return rentalRepository.save(rental);
+    } else {
+      return null;
     }
+  }
 }

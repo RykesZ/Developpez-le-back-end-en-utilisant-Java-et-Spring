@@ -1,5 +1,6 @@
 package com.chatop.portal.controller;
 
+import com.chatop.portal.dto.UserPublic;
 import com.chatop.portal.model.LoginParameters;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +11,7 @@ import com.chatop.portal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +28,10 @@ public class UserController {
     @Autowired
     private JWTService jwtService;
 
-
-    @GetMapping("/user/{id}")
-    public Optional<User> getUser(@PathVariable Long id) {
-        return userService.getUser(id);
+    @GetMapping("/me")
+    public UserPublic getMe() {
+      Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      return new UserPublic((User)principal);
     }
 
     @PostMapping("/register")
@@ -38,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?>  getToken(@RequestBody LoginParameters loginParameters) {
+    public ResponseEntity<String>  getToken(@RequestBody LoginParameters loginParameters) {
        User authenticatedUser = userService.authenticateUser(loginParameters.getEmail(), loginParameters.getPassword());
 
         if (authenticatedUser != null) {

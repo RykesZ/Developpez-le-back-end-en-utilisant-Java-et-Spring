@@ -23,8 +23,9 @@ public class UserService  {
     private BCryptPasswordEncoder passwordEncoder;
 
 
-    public Optional<User> getUser(final Long id) {
-        return userRepository.findById(id);
+    public Optional<User> getUser(final String email) {
+
+      return userRepository.findByEmail(email);
     }
 
     public User createUser(User user) {
@@ -35,8 +36,7 @@ public class UserService  {
 
     public User authenticateUser(String email, String password) {
         // Recherche de l'utilisateur par email
-        User user = userRepository.findByEmail(email)
-                .orElse(null);
+        User user = userRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User not found with email :" + email));
 
         // Vérification si l'utilisateur existe et si le mot de passe correspond
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
