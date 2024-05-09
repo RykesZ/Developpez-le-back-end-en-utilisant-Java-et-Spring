@@ -1,11 +1,10 @@
 package com.chatop.portal.service;
 
+import com.chatop.portal.dto.UserPublic;
 import com.chatop.portal.model.User;
 import com.chatop.portal.repository.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,9 +22,12 @@ public class UserService  {
     private BCryptPasswordEncoder passwordEncoder;
 
 
-    public Optional<User> getUser(final String email) {
+    public Optional<User> getUserByEmail(final String email) {
+      return userRepository.findUserByEmail(email);
+    }
 
-      return userRepository.findByEmail(email);
+    public Optional<User> getUserById(final Long id) {
+      return userRepository.findById(id);
     }
 
     public User createUser(User user) {
@@ -36,7 +38,7 @@ public class UserService  {
 
     public User authenticateUser(String email, String password) {
         // Recherche de l'utilisateur par email
-        User user = userRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User not found with email :" + email));
+        User user = userRepository.findUserByEmail(email).orElseThrow(()->new UsernameNotFoundException("User not found with email :" + email));
 
         // Vérification si l'utilisateur existe et si le mot de passe correspond
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {

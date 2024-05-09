@@ -14,8 +14,8 @@ public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
-    public Message saveMessage(Message message) {
+    public String saveMessage(Message message) {
         Message savedMessage= messageRepository.save(message);
-        return savedMessage;
+        return savedMessage.getMessage();
     }
 }

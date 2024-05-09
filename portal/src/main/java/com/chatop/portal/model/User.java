@@ -1,9 +1,7 @@
 package com.chatop.portal.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.Date;
@@ -27,13 +25,23 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+  @Column(name = "created_at", nullable = false, updatable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date created_at;
 
-    @Column(nullable = false)
-    private Date created_at;
+  @Column(name = "updated_at", nullable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date updated_at;
 
-    @Column(nullable = false)
-    private Date updated_at;
+  @PrePersist
+  protected void onCreate() {
+    this.created_at = new Date();
+    this.updated_at = new Date();
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    this.updated_at = new Date();
+  }
 
 }

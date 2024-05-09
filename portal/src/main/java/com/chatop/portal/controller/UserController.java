@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api")
 public class UserController {
 
     @Autowired
@@ -28,18 +28,38 @@ public class UserController {
     @Autowired
     private JWTService jwtService;
 
-    @GetMapping("/me")
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUser(@PathVariable Long id) {
+      Optional<User> user = userService.getUserById(id);
+      if (user.isPresent()) {
+        return ResponseEntity.ok(new UserPublic(user.get()));
+      } else {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Utilisateur inexistant pour cet id");
+      }
+
+    }
+
+    @GetMapping("auth/me")
     public UserPublic getMe() {
       Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
       return new UserPublic((User)principal);
     }
 
-    @PostMapping("/register")
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    @PostMapping("auth/register")
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+
+      User createdUser = userService.createUser(user);
+      if (createdUser != null) {
+          // Génère le JWT
+          String token = jwtService.generateToken(user.getEmail());
+          // Renvoie le JWT en réponse
+          return ResponseEntity.ok(token);
+      } else {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Informations incorrectes");
+      }
     }
 
-    @PostMapping("/login")
+    @PostMapping("auth/login")
     public ResponseEntity<String>  getToken(@RequestBody LoginParameters loginParameters) {
        User authenticatedUser = userService.authenticateUser(loginParameters.getEmail(), loginParameters.getPassword());
 

@@ -1,18 +1,12 @@
 package com.chatop.portal.config;
 
 import com.chatop.portal.model.User;
-import com.chatop.portal.repository.UserRepository;
 import com.chatop.portal.service.JWTService;
 import com.chatop.portal.service.UserService;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,7 +15,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Key;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
@@ -46,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         Claims claims = jwtService.decodeToken(jwt);
         String email = claims.getSubject();
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            Optional<User> user = userService.getUser(email);
+            Optional<User> user = userService.getUserByEmail(email);
             if (user.isPresent() && validateToken(claims, user.get())) {
               UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 user.get(), null, Collections.emptyList());

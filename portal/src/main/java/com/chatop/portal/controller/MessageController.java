@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api")
 public class MessageController {
 
     @Autowired
     private MessageService messageService;
 
     @PostMapping("/messages")
-    public Message createMessage(@RequestBody Message message) {
+    public String createMessage(@RequestBody Message message) {
         return messageService.saveMessage(message);
     }
 }

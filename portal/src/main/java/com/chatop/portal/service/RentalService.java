@@ -31,9 +31,7 @@ public class RentalService {
     rental.setPrice(price);
     rental.setPicture(picturePath);
     rental.setDescription(description);
-    rental.setOwnerId(ownerId);
-    rental.setCreated_at(new Date());
-    rental.setUpdated_at(new Date());
+    rental.setOwner_id(ownerId);
 
     return rentalRepository.save(rental);
   }
@@ -46,7 +44,6 @@ public class RentalService {
       rental.setSurface(surface);
       rental.setPrice(price);
       rental.setDescription(description);
-      rental.setUpdated_at(new Date());
       return rentalRepository.save(rental);
     } else {
       return null;

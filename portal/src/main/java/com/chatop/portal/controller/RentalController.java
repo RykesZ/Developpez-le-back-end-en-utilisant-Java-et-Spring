@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api")
 public class RentalController {
 
     @Autowired
@@ -27,13 +28,12 @@ public class RentalController {
     @GetMapping("/rentals")
     @Secured("ROLE_TENANT")
     public Iterable<Rental> getRentals() {
-      Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
       return rentalService.getRentals();
     }
 
     @GetMapping("/rentals/{id}")
     public Optional<Rental> getRental(@PathVariable Long id) {
-        return rentalService.getRental(id);
+      return rentalService.getRental(id);
     }
 
     @PostMapping(value = "/rentals", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -50,7 +50,7 @@ public class RentalController {
         throw new IOException("Could not save file: " + fileName, ioException);
       }
 
-      return new ResponseEntity<>("success", HttpStatus.OK);
+      return new ResponseEntity<>("Rental created !", HttpStatus.OK);
     }
 
   @PutMapping("/rentals/{id}")
@@ -69,6 +69,6 @@ public class RentalController {
     rental.setDescription(description);
     rentalService.updateRental(id, rental.getName(), rental.getSurface(), rental.getPrice(), rental.getDescription());
 
-    return ResponseEntity.ok("Rental updated successfully");
+    return ResponseEntity.ok("Rental updated !");
   }
 }
