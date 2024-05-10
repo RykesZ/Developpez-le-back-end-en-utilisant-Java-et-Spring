@@ -4,11 +4,10 @@ import com.chatop.portal.model.Rental;
 import com.chatop.portal.model.User;
 import com.chatop.portal.service.FileUploadService;
 import com.chatop.portal.service.RentalService;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +25,10 @@ public class RentalController {
     private RentalService rentalService;
 
     @GetMapping("/rentals")
-    @Secured("ROLE_TENANT")
-    public Iterable<Rental> getRentals() {
-      return rentalService.getRentals();
+    public ResponseEntity<Object> getRentals() {
+      JSONObject responseJson = new JSONObject();
+      responseJson.put("rentals", rentalService.getRentals());
+      return ResponseEntity.ok(responseJson.toString());
     }
 
     @GetMapping("/rentals/{id}")
@@ -37,7 +37,7 @@ public class RentalController {
     }
 
     @PostMapping(value = "/rentals", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> createRental(@RequestParam String name, @RequestParam Double surface, @RequestParam Double price, @RequestParam String description, @RequestPart MultipartFile picture) throws IOException {
+    public ResponseEntity<Object> createRental(@RequestParam String name, @RequestParam Double surface, @RequestParam Double price, @RequestParam String description, @RequestPart MultipartFile picture) throws IOException {
       String fileName = StringUtils.cleanPath(picture.getOriginalFilename());
 
       try {
@@ -50,7 +50,9 @@ public class RentalController {
         throw new IOException("Could not save file: " + fileName, ioException);
       }
 
-      return new ResponseEntity<>("Rental created !", HttpStatus.OK);
+      JSONObject responseJson = new JSONObject();
+      responseJson.put("message", "Rental created !");
+      return ResponseEntity.ok(responseJson.toString());
     }
 
   @PutMapping("/rentals/{id}")
@@ -69,6 +71,8 @@ public class RentalController {
     rental.setDescription(description);
     rentalService.updateRental(id, rental.getName(), rental.getSurface(), rental.getPrice(), rental.getDescription());
 
-    return ResponseEntity.ok("Rental updated !");
+    JSONObject responseJson = new JSONObject();
+    responseJson.put("message", "Rental updated !");
+    return ResponseEntity.ok(responseJson.toString());
   }
 }

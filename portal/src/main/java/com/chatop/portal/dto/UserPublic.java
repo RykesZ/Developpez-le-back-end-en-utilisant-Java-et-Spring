@@ -2,7 +2,6 @@ package com.chatop.portal.dto;
 
 import com.chatop.portal.model.User;
 import lombok.Data;
-
 import java.util.Date;
 
 @Data
