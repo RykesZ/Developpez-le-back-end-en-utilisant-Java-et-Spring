@@ -11,14 +11,14 @@ public class UserPublic {
     this.id = user.getId();
     this.email = user.getEmail();
     this.name = user.getName();
-    this.createdAt = user.getCreated_at();
-    this.updatedAt = user.getUpdated_at();
+    this.created_at = user.getCreated_at();
+    this.updated_at = user.getUpdated_at();
 
   }
 
   private Long id;
   private String name;
   private String email;
-  private Date createdAt;
-  private Date updatedAt;
+  private Date created_at;
+  private Date updated_at;
 }

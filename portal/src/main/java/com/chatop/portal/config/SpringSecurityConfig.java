@@ -1,5 +1,6 @@
 package com.chatop.portal.config;
 
+import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -33,6 +34,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                   .requestMatchers(mvc.pattern("/api/auth/register")).permitAll()
                   .requestMatchers(mvc.pattern("/api/auth/login")).permitAll()
+                  .requestMatchers(mvc.pattern("/api/Files-Upload/**")).permitAll()
                   .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
           .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -44,11 +46,6 @@ public class SpringSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService users() {
-        UserDetails user = User.builder().username("user").password(passwordEncoder().encode("password")).roles("USER").build();
-        return new InMemoryUserDetailsManager(user);
-    }
   @Bean
   MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
     return new MvcRequestMatcher.Builder(introspector);

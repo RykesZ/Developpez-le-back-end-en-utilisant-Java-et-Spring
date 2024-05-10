@@ -29,7 +29,7 @@ public class FileUploadService {
         throw new IOException("Could not save file: " + fileName, ioe);
       }
 
-      return filePath;
+      return Paths.get("/api/" + filePath);
     } else {
       return Path.of("");
     }
