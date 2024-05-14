@@ -36,16 +36,6 @@ public class UserService  {
         return userRepository.save(user);
     }
 
-    public User authenticateUser(String email, String password) {
-        // Recherche de l'utilisateur par email
-        User user = userRepository.findUserByEmail(email).orElseThrow(()->new UsernameNotFoundException("User not found with email :" + email));
 
-        // Vérification si l'utilisateur existe et si le mot de passe correspond
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            return user;
-        } else {
-            return null;
-        }
-    }
 }
 

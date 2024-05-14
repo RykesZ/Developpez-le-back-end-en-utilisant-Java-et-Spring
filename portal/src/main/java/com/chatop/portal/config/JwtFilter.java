@@ -35,7 +35,6 @@ public class JwtFilter extends OncePerRequestFilter {
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
       String jwt = authorizationHeader.substring(7);
       try {
-        // Récupérer les claims permet de vérifier que le token est valide
         Claims claims = jwtService.decodeToken(jwt);
         String email = claims.getSubject();
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -48,7 +47,6 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
       } catch (Exception e) {
-        // Si le JWT est expiré, invalide, mal formé, etc.
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         return;
       }

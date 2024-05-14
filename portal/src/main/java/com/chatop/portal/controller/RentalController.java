@@ -81,7 +81,6 @@ public class RentalController {
   @SecurityRequirement(name = "Bearer Authentication")
   @PutMapping("/rentals/{id}")
   public ResponseEntity<String> updateRental(@PathVariable Long id, @RequestParam String name, @RequestParam Double surface, @RequestParam Double price, @RequestParam String description) throws IOException {
-    // Vérifier si la location avec l'ID spécifié existe
     Optional<Rental> optionalRental = rentalService.getRental(id);
     if (optionalRental.isEmpty()) {
       return ResponseEntity.notFound().build();
