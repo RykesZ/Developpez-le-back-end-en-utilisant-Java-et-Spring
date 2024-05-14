@@ -4,6 +4,8 @@ import com.chatop.portal.model.Rental;
 import com.chatop.portal.model.User;
 import com.chatop.portal.service.FileUploadService;
 import com.chatop.portal.service.RentalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,6 +26,8 @@ public class RentalController {
     @Autowired
     private RentalService rentalService;
 
+    @Operation(summary = "Get all the rentals", description = "Allow the current authenticated user to get all the rentals")
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/rentals")
     public ResponseEntity<Object> getRentals() {
       JSONObject responseJson = new JSONObject();
@@ -31,11 +35,15 @@ public class RentalController {
       return ResponseEntity.ok(responseJson.toString());
     }
 
+    @Operation(summary = "Get one rental infos", description = "Allow the current authenticated user to get one rental infos")
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/rentals/{id}")
     public Optional<Rental> getRental(@PathVariable Long id) {
       return rentalService.getRental(id);
     }
 
+    @Operation(summary = "Post a new rental", description = "Allow the current authenticated user to post a new rental")
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping(value = "/rentals", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Object> createRental(@RequestParam String name, @RequestParam Double surface, @RequestParam Double price, @RequestParam String description, @RequestPart MultipartFile picture) throws IOException {
       String fileName = StringUtils.cleanPath(picture.getOriginalFilename());
@@ -55,6 +63,8 @@ public class RentalController {
       return ResponseEntity.ok(responseJson.toString());
     }
 
+  @Operation(summary = "Modify an existing rental", description = "Allow the current authenticated user to modify one of their own rentals")
+  @SecurityRequirement(name = "Bearer Authentication")
   @PutMapping("/rentals/{id}")
   public ResponseEntity<String> updateRental(@PathVariable Long id, @RequestParam String name, @RequestParam Double surface, @RequestParam Double price, @RequestParam String description) throws IOException {
     // Vérifier si la location avec l'ID spécifié existe

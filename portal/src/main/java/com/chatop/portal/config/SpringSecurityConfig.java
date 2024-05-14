@@ -35,6 +35,8 @@ public class SpringSecurityConfig {
                   .requestMatchers(mvc.pattern("/api/auth/register")).permitAll()
                   .requestMatchers(mvc.pattern("/api/auth/login")).permitAll()
                   .requestMatchers(mvc.pattern("/api/Files-Upload/**")).permitAll()
+                  .requestMatchers(mvc.pattern("/v3/api-docs/**"),
+                      mvc.pattern("/swagger-ui/**")).permitAll()
                   .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
           .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
