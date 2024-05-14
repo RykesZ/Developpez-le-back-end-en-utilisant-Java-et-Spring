@@ -1,5 +1,6 @@
 package com.chatop.portal.controller;
 
+import com.chatop.portal.dto.RentalPublic;
 import com.chatop.portal.model.Rental;
 import com.chatop.portal.model.User;
 import com.chatop.portal.service.FileUploadService;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,16 +34,26 @@ public class RentalController {
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/rentals")
     public ResponseEntity<Object> getRentals() {
+      Iterable<Rental> rentals = rentalService.getRentals();
+      List<RentalPublic> rentalPublicList = new ArrayList<>();
+      for (Rental rental : rentals) {
+        rentalPublicList.add(new RentalPublic(rental));
+      }
       JSONObject responseJson = new JSONObject();
-      responseJson.put("rentals", rentalService.getRentals());
+      responseJson.put("rentals", rentalPublicList);
       return ResponseEntity.ok(responseJson.toString());
     }
 
     @Operation(summary = "Get one rental infos", description = "Allow the current authenticated user to get one rental infos")
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/rentals/{id}")
-    public Optional<Rental> getRental(@PathVariable Long id) {
-      return rentalService.getRental(id);
+    public ResponseEntity<?> getRental(@PathVariable Long id) {
+      Optional<Rental> rental = rentalService.getRental(id);
+      if (rental.isPresent()) {
+        return ResponseEntity.ok(new RentalPublic(rental.get()));
+      } else {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Location inexistante pour cet id");
+      }
     }
 
     @Operation(summary = "Post a new rental", description = "Allow the current authenticated user to post a new rental")
