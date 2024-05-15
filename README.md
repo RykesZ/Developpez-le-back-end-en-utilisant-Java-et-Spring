@@ -5,7 +5,7 @@ Ce projet consiste à mettre en place le back-end d'une application en utilisant
 ## Importer le repo
 
 1. Importez le repo [https://github.com/RykesZ/Developpez-le-back-end-en-utilisant-Java-et-Spring.git](https://github.com/RykesZ/Developpez-le-back-end-en-utilisant-Java-et-Spring.git) dans un dossier nommé "Projet_3".
-2. Assurez-vous de vous placer sur la branche `dev`.
+2. Assurez-vous de vous placer sur la branche `release`.
 
 ## Création de la BDD
 
