@@ -12,9 +12,9 @@ Ce projet consiste à mettre en place le back-end d'une application en utilisant
 1. Créez une base de données MySQL et nommez-la "chatop".
 2. Exécutez les requêtes SQL se trouvant dans `Projet_3/ressources/sql/script.sql` pour générer les tables nécessaires au fonctionnement de l'API.
 3. Dans `Projet_3/portal/resources`, utilisez le fichier `.env.template` pour créer un fichier `.env` en remplissant les champs suivants :
-   - `DB_URL` : l'URL vers la base de données MySQL créée. Si elle a été créée localement, l'URL sera de la forme `jdbc:mysql://localhost:{port}/chatop?serverTimezone=UTC`, en remplaçant `{port}` par le port de votre base de données.
-   - `DB_USERNAME` : le nom d'utilisateur ayant les droits d'insertion et de lecture de la base de données.
-   - `DB_PASSWORD` : le mot de passe associé à l'utilisateur.
+  - `DB_URL` : l'URL vers la base de données MySQL créée. Si elle a été créée localement, l'URL sera de la forme `jdbc:mysql://localhost:{port}/chatop?serverTimezone=UTC`, en remplaçant `{port}` par le port de votre base de données.
+  - `DB_USERNAME` : le nom d'utilisateur ayant les droits d'insertion et de lecture de la base de données.
+  - `DB_PASSWORD` : le mot de passe associé à l'utilisateur.
 
 ## Front End
 
